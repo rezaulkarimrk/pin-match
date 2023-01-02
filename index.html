@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pin Generator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pin-generator half-width">
+                    <input id="generateor-value" class="form-control" type="text">
+                    <button id="generateor" class="generate-btn">Generate Pin</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-section half-width">
+                    <input id="type-value" class="form-control" type="text">
+                    <div class="numbers">
+                        <div class="calc-body">
+                            <div class="calc-button-row">
+                              <div onclick="addNumber('seven')" id="seven"  class="button">7</div>
+                              <div onclick="addNumber('eight')" id="eight"  class="button">8</div>
+                              <div onclick="addNumber('nine')" id="nine"  class="button">9</div>
+                            </div>
+                            <div class="calc-button-row">
+                              <div onclick="addNumber('four')" id="four"  class="button">4</div>
+                              <div onclick="addNumber('five')" id="five"  class="button">5</div>
+                              <div onclick="addNumber('six')" id="six"  class="button">6</div>
+                            </div>
+                            <div id=""  class="calc-button-row">
+                              <div onclick="addNumber('one')" id="one"  class="button">1</div>
+                              <div onclick="addNumber('two')" id="two"  class="button">2</div>
+                              <div onclick="addNumber('three')" id="three"  class="button">3</div>
+                            </div>
+                            <div class="calc-button-row">
+                                <div onclick="addNumber('delete')" id="delete"  class="button">&lt;</div>
+                                <div onclick="addNumber('zero')" id="zero"  class="button">0</div>
+                                <div onclick="addNumber('clear-all')"  id="clear-all" class="button">C</div>
+                            </div>
+                            <div>
+                                <button id="submit" type="submit" class="submit-btn">Submit</button>
+                                <p id="have-try" class="action-left">3 try left</p>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="notify-section">
+            <p id="notify-unmatch" class="notify">❌ Pin Didn't Match, Please try again</p>
+            <p id="notify-match" class="notify">✅ Pin Matched... Secret door is opening for you</p>
+        </div>
+    </div>
+    <script>
+
+
+        function addNumber(id){
+            const value = document.getElementById(id).innerHTML;
+
+            let typeValue = document.getElementById('type-value').value;
+            let totalValue =  typeValue+value;
+            if(value == '&lt;'){
+                if(totalValue=='&lt;'){
+                    totalValue='';
+                }
+                totalValue = totalValue.slice(0, (totalValue.length-5))
+            }
+            else if(value =='C'){
+                totalValue='';
+            }
+            document.getElementById('type-value').value=totalValue;
+        }
+
+        function setValue (id, value){
+            document.getElementById(id).value=value;
+        }
+        document.getElementById('generateor').addEventListener('click', function(){
+            const randNumber =(( Math.random()+1)*1000).toFixed(0);
+
+            setValue('generateor-value', randNumber);
+        });
+
+        function findValue(id){
+            const value = parseInt(document.getElementById(id).value);
+            return value;
+
+        }
+        function resetValue(id){
+            document.getElementById(id).value='';
+        }
+        document.getElementById('submit').addEventListener('click', function(){
+            const generateValue=findValue('generateor-value');
+            const typeValue = findValue('type-value');
+            
+            const haveTryBtn=document.getElementById('have-try')
+            const  haveTry = parseInt(haveTryBtn.innerText)-1;
+            haveTryBtn.innerText=haveTry+' try left';
+            if(haveTry===0){
+                document.getElementById('submit').disabled = true;
+            }
+
+
+            if(generateValue==typeValue){
+                const show = document.getElementById('notify-match');
+                show.style.display = 'block';
+                const unmatch = document.getElementById('notify-unmatch');
+                unmatch.style.display = 'none';
+                
+            }
+            else{
+                const show = document.getElementById('notify-match');
+                show.style.display = 'none';
+                const unmatch = document.getElementById('notify-unmatch');
+                unmatch.style.display = 'block';
+            }
+            resetValue('generateor-value');
+            resetValue('type-value');
+
+        });
+
+    </script>
+
+    
+    
+
+</body>
+</html>
